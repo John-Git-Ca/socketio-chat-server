@@ -32,12 +32,12 @@ io.on('connect', (socket) => {
     socket.join(user.room);
     socket.emit('message', {
       user: 'admin',
-      text: `${user.name}, welcome to the room ${user.room}`,
+      text: `${user.name}, welcome !!!`,
     });
 
     socket.broadcast
       .to(user.room)
-      .emit('message', { user: 'admin', text: `${user.name}, has joined` });
+      .emit('message', { user: 'admin', text: `${user.name} has joined` });
 
     io.to(user.room).emit('roomData', {
       room: user.room,
