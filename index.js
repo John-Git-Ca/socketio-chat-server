@@ -30,9 +30,19 @@ io.on('connect', (socket) => {
       return callback(error);
     }
     socket.join(user.room);
+    socket.emit('me', socket.id);
     socket.emit('message', {
       user: 'admin',
       text: `${user.name}, welcome !!!`,
+    });
+
+    socket.on('callUser', ({ userToCall, signalData, from, name }) => {
+      io.to(userToCall).emit('callUser', { signal: signalData, from, name });
+    });
+
+    socket.on('answerCall', (data) => {
+      console.log('call answered');
+      io.to(data.to).emit('callAccepted', data.signal);
     });
 
     socket.broadcast
@@ -67,7 +77,6 @@ io.on('connect', (socket) => {
         users: getUsersInRoom(user.room),
       });
     }
-    console.log('user had left');
   });
 });
 
